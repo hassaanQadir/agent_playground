@@ -149,8 +149,10 @@ def test(user_input):
     time.sleep(30)
     user_input += "Successfully accessed\n"
     user_input += "the molbio.ai"
+    user_input += retry_on_error(askOpenTrons, "Locate E. coli sample.")
     return user_input
 if __name__ == "__main__":
-   answer = main("Make glow in the dark e. coli")
+   #answer = main("Make glow in the dark e. coli")
+   answer = test("batman")
    with open('answer.txt', 'w') as f:
     f.write(answer)
