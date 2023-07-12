@@ -73,6 +73,7 @@ def askOpenTrons(query):
     augmented_query = "\n\n---\n\n".join(contexts) + "\n\n-----\n\n" + query
     # system message to 'prime' the model
     template = (agentsData[5]['agent5_template'])
+    
     res = openai.ChatCompletion.create(
         model=agentsData[0]['chat_model'],
         messages=[
