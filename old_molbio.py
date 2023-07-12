@@ -146,7 +146,7 @@ def main(user_input):
                     output_string += "\n\n"
     return output_string
 def test(user_input):
-    time.sleep(30)
+    time.sleep(3)
     user_input += "Successfully accessed\n"
     user_input += "the molbio.ai"
     user_input += retry_on_error(askOpenTrons, "Locate E. coli sample.")
