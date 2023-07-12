@@ -108,6 +108,7 @@ def main(user_input):
     output_1 = chain_1.run(user_input)
     raw_phases = output_1.split('|||')
     phases = [s for s in raw_phases if len(s) >= 10]
+    phases = phases[1]
     output_string += "Here are all the phases at once\n\n"
     output_string += "\n".join(phases)
     output_string += "\n"
@@ -116,6 +117,7 @@ def main(user_input):
         output_2 = chain_2.run(phase)
         raw_steps = output_2.split('|||')
         steps = [s for s in raw_steps if len(s) >= 10]
+        steps = steps[1]
         output_string += "Here are all the steps at once for this phase\n\n"
         output_string += "\n".join(steps)
         output_string += "\n"
@@ -124,6 +126,7 @@ def main(user_input):
             output_3 = chain_3.run(step)
             raw_substeps = output_3.split('|||')
             substeps = [s for s in raw_substeps if len(s) >= 10]
+            substeps = substeps[1]
             output_string += "Here are all the substeps at once for this step\n\n"
             output_string += "\n".join(substeps)
             output_string += "\n"
@@ -132,6 +135,7 @@ def main(user_input):
                 output_4 = chain_4.run(substep)
                 raw_commands = output_4.split('|||')
                 commands = [s for s in raw_commands if len(s) >= 5]
+                commands = commands[1]
                 output_string += "Here are all the commands at once for this substep\n"
                 output_string += "\n".join(commands)
                 output_string += "\n"

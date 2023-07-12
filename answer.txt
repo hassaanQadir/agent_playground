@@ -1,0 +1,154 @@
+Here are all the phases at once
+
+Phase 1: Gene Selection and Cloning
+In this phase, you will select the genes responsible for bioluminescence and clone them into the E. coli genome. You will need to identify and isolate the genes from a bioluminescent organism, such as a firefly or jellyfish, and design primers for PCR amplification. Once amplified, the genes will be ligated into a suitable plasmid vector for cloning into E. coli.
+
+
+Phase 2: Transformation and Screening
+In this phase, you will transform the recombinant plasmid carrying the bioluminescent genes into E. coli and screen for positive clones. You will need to optimize the transformation conditions and select the appropriate antibiotic resistance marker for selection of positive clones. Positive clones will exhibit bioluminescence under specific conditions.
+
+
+Phase 3: Expression and Optimization
+In this phase, you will optimize the expression of the bioluminescent genes in E. coli to maximize the production of the glowing protein. You will need to optimize growth conditions, such as temperature, media composition, and inducer concentration, to enhance the expression of the bioluminescent genes. Additionally, you may need to perform mutagenesis or genetic engineering to improve the brightness and stability of the glow in the dark E. coli.
+
+
+Phase 1
+Phase 1: Gene Selection and Cloning
+In this phase, you will select the genes responsible for bioluminescence and clone them into the E. coli genome. You will need to identify and isolate the genes from a bioluminescent organism, such as a firefly or jellyfish, and design primers for PCR amplification. Once amplified, the genes will be ligated into a suitable plasmid vector for cloning into E. coli.
+
+
+Here are all the steps at once for this phase
+
+ Step 1: Gene Identification and Isolation
+Start by identifying and isolating the genes responsible for bioluminescence from a bioluminescent organism, such as a firefly or jellyfish. This can be done by conducting a literature search to identify known bioluminescent genes or by using molecular biology techniques like PCR or DNA sequencing to identify novel bioluminescent genes. Once identified, isolate the DNA containing the bioluminescent genes using techniques like DNA extraction or PCR amplification.
+
+
+Step 1
+ Step 1: Gene Identification and Isolation
+Start by identifying and isolating the genes responsible for bioluminescence from a bioluminescent organism, such as a firefly or jellyfish. This can be done by conducting a literature search to identify known bioluminescent genes or by using molecular biology techniques like PCR or DNA sequencing to identify novel bioluminescent genes. Once identified, isolate the DNA containing the bioluminescent genes using techniques like DNA extraction or PCR amplification.
+
+
+Here are all the substeps at once for this step
+
+ Substep 1: Conduct a literature search to identify known bioluminescent genes or design primers for PCR amplification of potential bioluminescent genes.
+
+Substep 1
+ Substep 1: Conduct a literature search to identify known bioluminescent genes or design primers for PCR amplification of potential bioluminescent genes.
+
+Here are all the commands at once for this substep
+ Line 1: Access literature database.
+
+Line 1
+ Line 1: Access literature database.
+
+Here is the code for this command
+I'm sorry, but I cannot directly access external databases or search literature. However, I can provide you with code examples and help you with any programming-related questions you may have. Is there anything else I can assist you with?
+
+
+
+Phase 2
+Phase 2: Transformation and Screening
+In this phase, you will transform the recombinant plasmid carrying the bioluminescent genes into E. coli and screen for positive clones. You will need to optimize the transformation conditions and select the appropriate antibiotic resistance marker for selection of positive clones. Positive clones will exhibit bioluminescence under specific conditions.
+
+
+Here are all the steps at once for this phase
+
+ Step 1: Plasmid Transformation
+Prepare competent E. coli cells by growing them to mid-log phase and treating them with calcium chloride or electroporation to increase their ability to take up DNA. Mix the recombinant plasmid carrying the bioluminescent genes with the competent E. coli cells. Incubate the mixture on ice for 30 minutes, then heat-shock at 42°C for 90 seconds. Immediately cool the mixture on ice for 2 minutes.
+
+Step 1
+ Step 1: Plasmid Transformation
+Prepare competent E. coli cells by growing them to mid-log phase and treating them with calcium chloride or electroporation to increase their ability to take up DNA. Mix the recombinant plasmid carrying the bioluminescent genes with the competent E. coli cells. Incubate the mixture on ice for 30 minutes, then heat-shock at 42°C for 90 seconds. Immediately cool the mixture on ice for 2 minutes.
+
+Here are all the substeps at once for this step
+
+ Substep 1: Inoculate a flask of LB broth with E. coli and grow the cells at 37°C with shaking until they reach mid-log phase (OD600nm = 0.4-0.6).
+
+Substep 1
+ Substep 1: Inoculate a flask of LB broth with E. coli and grow the cells at 37°C with shaking until they reach mid-log phase (OD600nm = 0.4-0.6).
+
+Here are all the commands at once for this substep
+ Line 1: Locate E. coli sample.
+
+Line 1
+ Line 1: Locate E. coli sample.
+
+Here is the code for this command
+To locate the E. coli sample, you will need to use the pipette to pick up a tip and then aspirate from the well where the E. coli sample is stored. We will assume that the E. coli sample is in well A1 of a 96-well plate in slot 1.
+
+Here is the code to accomplish this:
+
+```python
+from opentrons import protocol_api
+
+metadata = {
+    'protocolName': 'Locate E. coli sample',
+    'author': 'Your Name',
+    'description': 'Locating the E. coli sample',
+    'apiLevel': '2.0'
+}
+
+def run(protocol: protocol_api.ProtocolContext):
+
+    # Define the labware
+    plate = protocol.load_labware('corning_96_wellplate_360ul_flat', '1')
+
+    # Define the pipette
+    pipette = protocol.load_instrument('p300_single', 'right', tip_racks=[protocol.load_labware('opentrons_96_tiprack_300ul', '2')])
+
+    # Pick up tip
+    pipette.pick_up_tip()
+
+    # Aspirate from well A1
+    pipette.aspirate(30, plate['A1'])
+
+    # Dispense into well E2
+    pipette.dispense(30, plate['E2'])
+
+    # Drop the tip
+    pipette.drop_tip()
+```
+
+This code defines the labware (a 96-well plate in slot 1) and the pipette (p300_single on the right, using a tip rack in slot 2). It then picks up a tip, aspirates 30 µL from well A1, dispenses it into well E2, and finally drops the tip.
+
+Please note that this code assumes that the labware and pipette are already defined and set up on the robot.
+
+
+
+Phase 3
+Phase 3: Expression and Optimization
+In this phase, you will optimize the expression of the bioluminescent genes in E. coli to maximize the production of the glowing protein. You will need to optimize growth conditions, such as temperature, media composition, and inducer concentration, to enhance the expression of the bioluminescent genes. Additionally, you may need to perform mutagenesis or genetic engineering to improve the brightness and stability of the glow in the dark E. coli.
+Here are all the steps at once for this phase
+
+ Step 1: Growth Condition Optimization
+Start by testing different growth conditions to optimize the expression of the bioluminescent genes. Vary the temperature, media composition, and inducer concentration to find the conditions that yield the highest expression levels. For example, you can try growing the E. coli at different temperatures (e.g., 25°C, 30°C, 37°C) and in different media (e.g., LB broth, minimal media) supplemented with different concentrations of the inducer (e.g., IPTG). Monitor the bioluminescence levels using a luminometer or by visually assessing the glow.
+
+Step 1
+ Step 1: Growth Condition Optimization
+Start by testing different growth conditions to optimize the expression of the bioluminescent genes. Vary the temperature, media composition, and inducer concentration to find the conditions that yield the highest expression levels. For example, you can try growing the E. coli at different temperatures (e.g., 25°C, 30°C, 37°C) and in different media (e.g., LB broth, minimal media) supplemented with different concentrations of the inducer (e.g., IPTG). Monitor the bioluminescence levels using a luminometer or by visually assessing the glow.
+
+Here are all the substeps at once for this step
+
+ Substep 1: Prepare different growth conditions by varying the temperature, media composition, and inducer concentration. For example, prepare LB broth supplemented with different concentrations of IPTG (e.g., 0.1 mM, 0.5 mM, 1 mM) and minimal media with the same IPTG concentrations.
+
+Substep 1
+ Substep 1: Prepare different growth conditions by varying the temperature, media composition, and inducer concentration. For example, prepare LB broth supplemented with different concentrations of IPTG (e.g., 0.1 mM, 0.5 mM, 1 mM) and minimal media with the same IPTG concentrations.
+
+Here are all the commands at once for this substep
+ Line 1: Set temperature to desired value.
+
+Line 1
+ Line 1: Set temperature to desired value.
+
+Here is the code for this command
+To set the temperature to a desired value, you can use the `temperature_module.set_temperature()` method. 
+
+Here's an example code snippet to set the temperature to a desired value:
+
+```python
+# Replace 'temperature_module' with the variable name of your temperature module
+temperature_module.set_temperature(desired_temperature_in_celsius)
+```
+
+Make sure to replace `'temperature_module'` with the actual variable name of your temperature module, and `'desired_temperature_in_celsius'` with the desired temperature value in Celsius.
+
