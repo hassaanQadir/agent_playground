@@ -73,7 +73,7 @@ def askOpenTrons(query):
     augmented_query = "\n\n---\n\n".join(contexts) + "\n\n-----\n\n" + query
     # system message to 'prime' the model
     template = (agentsData[5]['agent5_template'])
-    
+
     res = openai.ChatCompletion.create(
         model=agentsData[0]['chat_model'],
         messages=[
@@ -148,5 +148,5 @@ def test(user_input):
     return user_input
 if __name__ == "__main__":
    answer = main("Make glow in the dark e. coli")
-   with open('readme.txt', 'w') as f:
+   with open('answer.txt', 'w') as f:
     f.write(answer)
