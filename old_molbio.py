@@ -146,10 +146,9 @@ def main(user_input):
                     output_string += "\n\n"
     return output_string
 def test(user_input):
-    time.sleep(3)
     user_input += "Successfully accessed\n"
-    user_input += "the molbio.ai"
-    user_input += retry_on_error(askOpenTrons, "Locate E. coli sample.")
+    user_input += "the molbio.ai\n"
+    user_input += retry_on_error(askOpenTrons, "Put 1 ng of DNA stored 50ug/ml into the eppendorf with 100 ul of water")
     return user_input
 if __name__ == "__main__":
    #answer = main("Make glow in the dark e. coli")
