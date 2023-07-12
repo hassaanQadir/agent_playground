@@ -2,30 +2,25 @@ main.py
 batman
 Successfully accessed
 the molbio.ai
-To put 1 ng of DNA stored at 50 ug/ml into an Eppendorf with 100 ul of water, you can use the following code:
+To complete the task of transferring 1 ng of DNA stored at 50 μg/ml into an Eppendorf tube with 100 μL of water, you can use the following code:
 
 ```python
-# Assuming your DNA sample is stored in a well named 'A1' in labware '1'
-# Assuming your water is stored in a well named 'A2' in labware '2'
-# Assuming you have a pipette defined as 'pipette' and calibrated
+# Assuming the DNA is stored in well A1 of a 96-well plate in slot 1
+# Assuming the Eppendorf tube is in slot 2
 
-# Pick up a tip
-pipette.pick_up_tip()
+# Define the labware and pipette
+plate = containers.load('96-PCR-flat', '1')
+eppendorf = containers.load('tube-rack-2ml', '2')
+pipette = instruments.P300_Single()
 
-# Aspirate 1 ng of DNA from well A1 in labware '1'
-pipette.aspirate(1, labware['1']['A1'])
+# Transfer 1 ng of DNA to the Eppendorf tube
+pipette.transfer(1, plate['A1'], eppendorf['A1'], new_tip='always')
 
-# Dispense the DNA into the Eppendorf well
-pipette.dispense(1, labware['3']['A1'])
+# Add 100 μL of water to the Eppendorf tube
+pipette.transfer(100, eppendorf['A1'], eppendorf['A1'], new_tip='always')
 
-# Aspirate 100 ul of water from well A2 in labware '2'
-pipette.aspirate(100, labware['2']['A2'])
-
-# Dispense the water into the Eppendorf well
-pipette.dispense(100, labware['3']['A1'])
-
-# Drop the tip
-pipette.drop_tip()
+# Print the commands in the protocol
+print(protocol.commands())
 ```
 
-Please note that you would need to replace `'1'`, `'2'`, and `'3'` with the actual labware and well names in your setup. Additionally, ensure that you have defined and calibrated your pipette.
+Please note that this code is a general example and may need modification based on your specific labware and deck configuration.

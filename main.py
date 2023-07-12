@@ -33,6 +33,8 @@ pinecone.init(api_key=pinecone_api_key, enviroment="us-west1-gcp")
 # Name of the index where we vectorized the OpenTrons API
 index_name = 'opentronsapi-docs'
 index = pinecone.Index(index_name)
+
+
 def retry_on_error(func, arg, max_attempts=5):
     """
     Retry a function in case of an error. This guards against rate limit errors.
@@ -54,11 +56,14 @@ def retry_on_error(func, arg, max_attempts=5):
                 print(f"Attempt {attempt + 1} failed. No more attempts left.")
                 API_error = "OpenTronsAPI Error"
                 return API_error
-def askOpenTrons(query):
+
+
+
+def queryAugmenter(query):
     """
-    Query the OpenTrons API index and return answers
+    Query the OpenTrons API index vectorized database and return an augmented query
     :param query: The question to ask
-    :return: The answer from the API
+    :return: Relevant context for the query from the OpenTrons API vector databse
     """
     embed_model = agentsData[0]['embed_model']
     res = openai.Embedding.create(
@@ -72,10 +77,14 @@ def askOpenTrons(query):
     # get list of retrieved text
     contexts = [item['metadata']['text'] for item in res['matches']]
     augmented_query = "\n\n---\n\n".join(contexts) + "\n\n-----\n\n" + query
+    
+    return augmented_query
+
+def askOpenTrons(augmented_query):
     # system message to 'prime' the model
     template = (agentsData[5]['agent5_template'])
 
-    res = openai.ChatCompletion.create(
+    res = openai.ChatCompletion.create( 
         model=agentsData[0]['chat_model'],
         messages=[
             {"role": "system", "content": template},
@@ -84,10 +93,13 @@ def askOpenTrons(query):
     )
     return (res['choices'][0]['message']['content'])
 
+
+
 def test(user_input):
     user_input += "Successfully accessed\n"
     user_input += "the molbio.ai\n"
-    user_input += retry_on_error(askOpenTrons, "Put 1 ng of DNA stored 50ug/ml into the eppendorf with 100 ul of water")
+    augmented_query = queryAugmenter("Put 1 ng of DNA stored 50ug/ml into the eppendorf with 100 ul of water")
+    user_input += retry_on_error(askOpenTrons, augmented_query)
     return user_input
 
 if __name__ == "__main__":
