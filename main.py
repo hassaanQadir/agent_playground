@@ -53,6 +53,7 @@ def queryAugmenter(index, chain_id, query):
         numbers = re.findall(r'\d+', chain_id)
         if numbers:  # If there are any numbers in the string
             chain_id = numbers[-1]  # Select the last group of numbers
+        chain_id = int(chain_id)
 
     template = chainsData[chain_id]['chain{}_template'.format(chain_id)]
 

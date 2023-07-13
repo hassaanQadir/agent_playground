@@ -1,152 +1,296 @@
 To perform the task of inoculating a flask of Luria-Bertani (LB) broth with E.coli and growing the cells overnight at 37°C with shaking, you can use the following code:
 
 ```python
-# Assuming the flask is in slot 1
-# Assuming the LB broth is in slot 2
+# Assuming the flask is in slot 1 and the plate with E.coli is in slot 2
 
 # Define the labware and pipette
 flask = containers.load('flask', '1')
-lb_broth = containers.load('tube-rack-15_50ml', '2')
+plate = containers.load('96-flat', '2')
 pipette = instruments.P300_Single()
 
-# Transfer 1 mL of LB broth to the flask
-pipette.transfer(1000, lb_broth['A1'], flask['A1'], new_tip='always')
+# Transfer 1 mL of LB broth from the flask to each well of the plate
+pipette.distribute(1000, flask, plate.wells(), new_tip='always')
 
-# Inoculate the flask with E.coli culture
-pipette.transfer(100, flask['A1'], flask['A1'], mix_after=(3, 100), new_tip='always')
+# Add a colony of E.coli to each well of the plate
+pipette.transfer(1, plate.wells(), plate.wells(), mix_after=(3, 100), new_tip='always')
 
-# Incubate the flask at 37°C with shaking
-# Please note that the incubation step is specific to your lab setup and may require additional equipment or code.
+# Incubate the plate overnight at 37°C with shaking
+protocol.incubate(37, duration='overnight', shaking=True)
 
 # Print the commands in the protocol
 print(protocol.commands())
 ```
 
-Please note that this code is a general example and may need modification based on your specific labware and deck configuration. Additionally, the incubation step requires additional equipment or code specific to your lab setup.Gives the name, contact information, and a brief description for the protocol. Also indicates the minimum version of the API that the protocol can run on.
-Tells the robot that there is:
-A 96-well flat plate in slot 1.
-A rack of 300 µL tips in slot 2.
-A single-channel 300 µL pipette attached to the left mount, which should pick up tips from the aforementioned rack.
-Tells the robot to act by:
-Picking up the first tip from the tip rack.
-Aspirating 100 µL of liquid from well A1 of the plate.
-Dispensing 100 µL of liquid into well B1 of the plate.
-Dropping the tip in the trash.
-There is much more that the OT-2 robot and the API can do! The Building Block Commands, Complex Commands, and Hardware Modules pages cover many of these functions.
-More Resources¶
-Opentrons App¶
-The Opentrons App is the easiest way to run your Python protocols. The app supports the latest versions of macOS, Windows, and Ubuntu.
-Support¶
-Questions about setting up your OT-2, using Opentrons software, or troubleshooting? Check out our support articles or get in touch directly with Opentrons Support.
-Custom Protocol Service¶
-Don’t have the time or resources to write your own protocols? The Opentrons Custom Protocols service can get you set up in as little as a week.
-Contributing¶
-Opentrons software, including the Python API and this documentation, is open source. If you have an improvement or an interesting idea, you can create an issue on GitHub by following our guidelines.
-That guide also includes more information on how to directly contribute code.
+Please note that this code is a general example and may need modification based on your specific labware and deck configuration.Dispensing 30.0 uL into well E2 in "1"
+Dispensing 30.0 uL into well F2 in "1"
+Dispensing 30.0 uL into well G2 in "1"
+Dispensing 30.0 uL into well H2 in "1"
+Blowing out at well A1 in "12"
+Dropping tip well A1 in "12"
+See this image for example,
+New in version 2.0.
 
 ---
 
-We thought you’d like to know…
-                The documentation you are viewing is for version 1 of the OT-2
-                Python Protocol API. This version of the API is no longer supported
-                on Opentrons App and Robot Software 4.0.0 and later. Please visit the
-                documentation for version 2 of the API
-                to access the most up to date information.
-            
-OT-2 Python API Version 1¶
-The Opentrons API is a simple Python framework designed to make writing automated biology lab protocols easy.
-We’ve designed it in a way we hope is accessible to anyone with basic Python and wetlab skills. As a bench scientist, you should be able to code your automated protocols in a way that reads like a lab notebook.
-Getting Started¶
-New to Python? Check out our Using Python In Protocols page first before continuing. To get a sense of the typical structure of our scripts, take a look at our Examples page.
-Our API requires Python version 3.7.6 or later. Once this is set up on your computer, you can simply use pip to install the Opentrons package.
-pip install opentrons
-To simulate protocols on your laptop, check out Simulating Your Scripts. When you’re ready to run your script on a robot, download our latest desktop app
-Troubleshooting¶
-If you encounter problems using our products please take a look at our support docs or contact our team via intercom on our website at opentrons.com.
-Overview¶
-How it Looks¶
-The design goal of the Opentrons API is to make code readable and easy to understand. For example, below is a short set of instruction to transfer from well 'A1' to well 'B1' that even a computer could understand:
-Use the Opentrons API's labware and instruments
-This protocol is by me; it’s called Opentrons Protocol Tutorial and is used for demonstrating the Opentrons API
-Add a 96 well plate, and place it in slot '2' of the robot deck
-Add a 200uL tip rack, and place it in slot '1' of the robot deck
-Add a single-channel 300uL pipette to the left mount, and tell it to use that tip rack
+will have the steps
+Transferring 50 from well A1 in "3" to wells A2...H12 in "3"
+Picking up tip wells A1...H1 in "4"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A2...H2 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A3...H3 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A4...H4 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A5...H5 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A6...H6 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A7...H7 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A8...H8 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A9...H9 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A10...H10 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A11...H11 in "3"
 
 ---
 
-We thought you'd like to know...
-The documentation you are viewing is for the Opentrons OT-1. If you have an Opentrons OT-2, please click here for the OT-2 Python Protocol API documentation.
-                
-                Opentrons API¶
-                The Opentrons API is a simple framework designed to make writing
-                automated biology lab protocols easy.
-              
-                We’ve designed it in a way we hope is accessible to anyone with
-                basic computer and wetlab skills. As a bench scientist, you
-                should be able to code your automated protocols in a way that
-                reads like a lab notebook.
-              
-View source code on GitHub
-                  How it Looks¶
-                  The design goal of the Opentrons API is to make code readable
-                  and easy to understand. For example, below is a short set of
-                  instruction to transfer from well
-                  'A1'
-                  to well
-                  'B1'
-                  that even a computer could understand:
-                
-Use the Opentrons API's containers and instruments
-Add a 96 well plate, and place it in slot 'B1'
-Add a 200uL tip rack, and place it in slot 'A1'
-Add a 200uL pipette to axis 'b', and tell it to use that tip rack
-Transfer 100uL from the plate's 'A1' well to it's 'A2' well
-                  If we were to rewrite this with the Opentrons API, it would
-                  look like the following:
-                
-# imports
-from opentrons import containers, instruments
-# containers
-plate = containers.load('96-flat', 'B1')
-tiprack = containers.load('tiprack-200ul', 'A1')
-# pipettes
-pipette = instruments.Pipette(axis='b', max_volume=200, tip_racks=[tiprack])
-# commands
-pipette.transfer(100, plate.wells('A1'), plate.wells('B1'))
-                  How it’s Organized¶
-                  When writing protocols using the Opentrons API, there are
-                  generally three sections:
-                
-Imports
-Containers
+Pipettes¶
+Next you’ll specify what pipette to use in the protocol. Loading a pipette is done with the load_instrument() method, which takes three arguments: the name of the pipette, the mount it’s installed in, and the tip racks it should use when performing transfers. Load whatever pipette you have installed in your robot by using its standard pipette name. Here’s how to load a P300 Single-Channel GEN2 pipette that’s installed in the left mount:
+p300 = protocol.load_instrument('p300_single_gen2', 'left', tip_racks=[tips])
+Since the pipette is so fundamental to the protocol, it might seem like you should have specified it first. But there’s a good reason why pipettes are loaded after labware: you need to have already loaded tips in order to tell the pipette to use it. And now you won’t have to reference tips again in your code — it’s assigned to the p300 pipette and the robot will know to use it when commanded to pick up tips.
+Note
+You may notice that the value of tip_racks is in brackets, indicating that it’s a list. This serial dilution protocol only uses one tip rack, but some protocols require more tips, so you can assign them to a pipette all at once, like tip_racks=[tips1, tips2].
+Commands¶
+Finally, all of your labware and hardware is in place, so it’s time to give the robot pipetting commands. The required steps of the serial dilution process break down into three main phases:
+Measure out equal amounts of diluent from the reservoir to every well on the plate.
+Measure out equal amounts of solution from the reservoir into wells in the first column of the plate.
+Move a portion of the combined liquid from column 1 to 2, then from column 2 to 3, and so on all the way to column 12.
+Thanks to the flexibility of the API’s transfer() method, which combines many building block commands into one call, each of these phases can be accomplished with a single line of code! You’ll just have to write a few more lines of code to repeat the process for as many rows as you want to fill.
+
+---
+
+Wells by Index
+Columns and Rows
+Multiple Wells
+Wells
+Wells To
+Wells Length
+Columns and Rows
+Slices
+Deprecated Labware Load Names
+Creating a Pipette
+Pipette Model(s)
+Pipette GEN2 Backwards Compatibility
+Plunger Flow Rates
+Minimum and Maximum Volume
+P10_Single
+P10_Multi
+P50_Single
+P50_Multi
+P300_Single
+P300_Multi
+P1000_Single
+P20_Single_GEN2
+P300_Single_GEN2
+P1000_Single_GEN2
+Old Pipette Constructor
+Atomic Liquid Handling
+Tip Handling
+Pick Up Tip
+Drop Tip
+Return Tip
+Tips Iterating
+Attach Tip Rack to Pipette
+Iterating Through Tips
+Reseting Tip Tracking
+Select Starting Tip
+Get Current Tip
+Liquid Control
+Aspirate
+Dispense
+Blow Out
+Touch Tip
+Mix
+Air Gap
+Controlling Speed
+Moving
+Move To
+Delay
+Complex Liquid Handling
+Transfer
+Basic
+Large Volumes
+Multiple Wells
+One to Many
+Few to Many
+List of Volumes
+Volume Gradient
+Distribute and Consolidate
+Consolidate
+Distribute
+Disposal Volume
+Transfer Options
+Always Get a New Tip
+Never Get a New Tip
+Use One Tip
+Trash or Return Tip
+Touch Tip
+Blow Out
+Mix Before/After
+Air Gap
+Multi-Channel Pipettes and Complex Liquid Handling
+Transfer in a 96 Well Plate
+Transfer in a 384 Well Plate
+Advanced Control
+User-Specified Pause
+Head Speed
+Homing
+Commands
+Clear Commands
+Comment
+Get Containers
+Reset
+Hardware Modules
+Loading your Module onto a deck
+Detecting your Module on the robot
+Checking the status of your Module
+Temperature Module
+Set Temperature
+Wait Until Setpoint Reached
+Read the Current Temperature
+Read the Target Temperature
+Deactivate
+Magnetic Module
+Engage
+Disengage
+Examples
+Basic Transfer
+Loops
+Multiple Air Gaps
+Dilution
+Plate Mapping
+Precision Pipetting
+API Reference
+Robot
+Pipette
+Placeable
+Simulation
+
+---
+
+Welcome¶
+Welcome
+Tutorial
+Introduction
+What You’ll Automate
+Before You Begin
+Create a Protocol File
+Metadata
+The run() function
+Labware
 Pipettes
 Commands
-                    Imports¶
-                    When writing in Python, you must always include the
-
----
-
-You are currently viewing the documentation for the Opentrons
-                OT-1. To view documentation for the OT-2, click
-                here.
-              
-Search
-                Please activate JavaScript to enable the search functionality.
-              
-              From here you can search these documents. Enter your search words
-              into the box below and click "search". Note that the search
-              function will automatically search for all of the words. Pages
-              containing fewer words won't appear in the result list.
-
----
-
-On a Robot¶
-The simplest way to run your protocol on an OT-2 is to use the Opentrons App. Once you’ve installed the app and connected to your robot, navigate to the Protocol tab. Click Choose File… and open your protocol from the file picker. You should see “Protocol - Serial Dilution Tutorial” (or whatever protocolName you entered in the metadata) in a banner at the top of the page.
-If you have any remaining calibration tasks to do, you can finish them up here. Below the calibration section is a preview of the initial deck state. Optionally you can run Labware Position Check, or you can go ahead and click Proceed to Run.
-On the Run tab, you can double-check the Protocol Steps, which are similar to the command-line simulation output. Make sure all your labware and liquids are in the right place, and then click Start run. The run log will update in real time as your robot proceeds through the steps.
-When it’s all done, check the results of your serial dilution procedure — you should have a beautiful dye gradient running across the plate!
-Next Steps¶
-This tutorial has relied heavily on the transfer() method, but there’s much more that the Python Protocol API can do. Many advanced applications use building block commands for finer control over the robot. These commands let you aspirate and dispense separately, add air gaps, blow out excess liquid, move the pipette to any location, and more. For protocols that use Opentrons Hardware Modules, there are methods to control their behavior. And all of the API’s classes and methods are catalogued in the API Version 2 Reference.
+8-Channel Pipette
+Try Your Protocol
+In Simulation
+On a Robot
+Next Steps
+Versioning
+Major and Minor Versions
+Specifying Versions
+Maximum Supported Versions
+Added Features
+API and Robot Software Versions
+Changes in API Versions
+Version 2.0
+Version 2.1
+Version 2.2
+Version 2.3
+Version 2.4
+Version 2.5
+Version 2.6
+Version 2.7
+Version 2.8
+Version 2.9
+Version 2.10
+Version 2.11
+Version 2.12
+Version 2.13
+Version 2.14
+Labware
+Finding Labware
+Default Labware
+Custom Labware
+Accessing Wells in Labware
+Well Ordering
+Accessor Methods
+Accessing Individual Wells
+Dictionary Access
+List Access From wells
+Accessing Groups of Wells
+Labeling Liquids in Wells
+Defining Liquids
+Labeling Wells and Reservoirs
+Labeling vs Handling Liquids
+Well Dimensions
+Depth
+Diameter
+Length
+Width
+Hardware Modules
+Module Setup
+Loading a Module onto the Deck
+Available Modules
+Loading Labware onto a Module
+Module and Labware Compatibility
+Additional Labware Parameters
+Using a Temperature Module
+Temperature Control
+Temperature Status
+Changes with the GEN2 Temperature Module
+Using a Magnetic Module
+Loading Labware
+Engaging and Disengaging
+Changes with the GEN2 Magnetic Module
+Using a Thermocycler Module
+Lid Control
+Block Control
+Temperature
+Hold Time
+Block Max Volume
+Thermocycler Profiles
+Changes with the GEN2 Thermocycler Module
+Using a Heater-Shaker Module
+Placement Restrictions
+Latch Control
+Loading Labware
+Heating and Shaking
+Blocking commands
+Non-blocking commands
+Deactivating
+Using Multiple Modules of the Same Type
+Pipettes
+Loading A Pipette
+Multi-Channel Pipettes
+Pipette Models
+GEN2 Pipette Backward Compatibility
+Adding Tip Racks
+Plunger Flow Rates
+Defaults
+Building Block Commands
+Tip Handling
+Pick Up Tip
+Drop Tip
+Return Tip
+Iterating Through Tips
+Liquid Control
+Aspirate
+Dispense
+Blow Out
 
 -----
 
