@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import json
 import time
 import openai
@@ -36,10 +37,17 @@ opentronsapi_docs = pinecone.Index(index_name)
 
 def queryAugmenter(index, chain_id, query):
     """
-    Query the OpenTrons API index vectorized database and return an augmented query
+    Query the vectorized database and return an augmented query
+    :param index: The vectorized database to search through
+    :param chain_id: The chain whose template will determine what is relevant context
     :param query: The question to ask
-    :return: Relevant context for the query from the OpenTrons API vector databse
+    :return: Relevant context for the query from the given vector databse
     """
+    # If chain_id is a string, extract the numbers at the end.
+    # If it's a number, just use that number.
+    if isinstance(chain_id, str):
+        chain_id = re.findall(r'\d+', chain_id)[-1]
+
     template = chainsData[chain_id]['chain{}_template'.format(chain_id)]
 
     embed_model = chainsData[0]['embed_model']
@@ -77,7 +85,7 @@ chain_5 = create_llmchain(5)
 
 def test(user_input):
     original_query = user_input
-    augmented_query = queryAugmenter(opentronsapi_docs, 5, original_query)
+    augmented_query = queryAugmenter(opentronsapi_docs, chain_5, original_query)
 
     theQuery = augmented_query
 
