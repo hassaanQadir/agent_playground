@@ -10,7 +10,18 @@
 
 ### this is where we vectorize the OpenTrons API
 
+
+# Load environment variables
+load_dotenv('.env')
+# Use the environment variables for the API keys if available
+openai_api_key = os.getenv('OPENAI_API_KEY')
+pinecone_api_key = os.getenv('PINECONE_API_KEY')
+
+
+## section 1: load and tokenize the document and split it into chunks
+
 from langchain.document_loaders import ReadTheDocsLoader
+
 
 loader = ReadTheDocsLoader('rtdocs')
 docs = loader.load()
@@ -58,10 +69,12 @@ for idx, page in enumerate(tqdm(docs)):
             'url': url
         } for i in range(len(texts))])
 
+
+## section 2: initialize an embedding model for use later
+
+
 import os
 import openai
-
-openai.api_key = "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"
 
 embed_model = "text-embedding-ada-002"
 
@@ -72,14 +85,16 @@ res = openai.Embedding.create(
     ], engine=embed_model
 )
 
+# section 3: create an index 
+
 import pinecone
 
 # initialize connection to pinecone (get API key at app.pinecone.io)
-api_key = "5027b332-54e4-4a94-82da-42c3c2a44dc8"
+api_key = pinecone_api_key
 # find your environment next to the api key in pinecone console
 env = "us-west1-gcp"
 
-pinecone.init(api_key="5027b332-54e4-4a94-82da-42c3c2a44dc8", enviroment="us-west1-gcp")
+pinecone.init(api_key=api_key, enviroment=env)
 
 
 index_name = 'opentronsapi-docs'
@@ -101,6 +116,8 @@ if index_name not in pinecone.list_indexes():
 index = pinecone.GRPCIndex(index_name)
 # view index stats
 index.describe_index_stats()
+
+# section 4: embed the chunks into the index
 
 from tqdm.auto import tqdm
 from time import sleep
