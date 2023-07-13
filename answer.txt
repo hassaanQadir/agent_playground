@@ -1,31 +1,114 @@
-batman
-
-To inoculate a flask of Luria-Bertani (LB) broth with E. coli and grow the cells overnight at 37°C with shaking, you can use the following code:
+To complete the task of inoculating a flask of Luria-Bertani (LB) broth with E.coli and growing the cells overnight at 37°C with shaking, you can use the following code:
 
 ```python
-# Assuming the flask is in slot 1 and the E. coli culture is in well A1 of a 96-well plate in slot 2
+# Assuming the flask is in slot 1 and the plate with E.coli is in slot 2
 
 # Define the labware and pipette
 flask = containers.load('flask', '1')
-plate = containers.load('96-PCR-flat', '2')
+plate = containers.load('96-flat', '2')
 pipette = instruments.P300_Single()
 
-# Transfer 1 mL of LB broth to the flask
-pipette.transfer(1000, plate['A1'], flask, new_tip='always')
+# Transfer 1 mL of LB broth from the flask to each well of the plate
+for well in plate.wells():
+    pipette.transfer(1000, flask, well, new_tip='always')
 
-# Inoculate the flask with E. coli
-pipette.transfer(10, plate['A1'], flask, new_tip='always')
+# Inoculate each well with E.coli from the corresponding well of the plate
+for well in plate.wells():
+    pipette.transfer(100, well, well, mix_after=(3, 100), new_tip='always')
 
-# Incubate the flask overnight at 37°C with shaking
-# You may need to use a shaking module or an incubator with shaking capabilities
-# The specific code for this step will depend on the equipment you are using
+# Incubate the plate overnight at 37°C with shaking
+incubation_time = 12  # hours
+incubation_temperature = 37  # degrees Celsius
+shaking_speed = 200  # rpm
+
+# Set the temperature of the incubator to 37°C
+incubator.set_temperature(incubation_temperature)
+
+# Set the shaking speed of the incubator to 200 rpm
+incubator.set_shaking_speed(shaking_speed)
+
+# Start the incubation for the specified time
+incubator.start_incubation(hours=incubation_time)
 
 # Print the commands in the protocol
 print(protocol.commands())
 ```
 
-Please note that this code is a general example and may need modification based on your specific labware and deck configuration. Additionally, the code for incubation will depend on the equipment you are using for shaking and temperature control.
+Please note that this code is a general example and may need modification based on your specific labware and deck configuration. Additionally, the code assumes that you have an incubator module attached to the robot and that it supports setting temperature and shaking speed.Dispensing 30.0 uL into well E2 in "1"
+Dispensing 30.0 uL into well F2 in "1"
+Dispensing 30.0 uL into well G2 in "1"
+Dispensing 30.0 uL into well H2 in "1"
+Blowing out at well A1 in "12"
+Dropping tip well A1 in "12"
+See this image for example,
+New in version 2.0.
 
-aquamanSuccessfully accessed
-the molbio.ai
+---
+
+will have the steps
+Transferring 50 from well A1 in "3" to wells A2...H12 in "3"
+Picking up tip wells A1...H1 in "4"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A2...H2 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A3...H3 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A4...H4 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A5...H5 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A6...H6 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A7...H7 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A8...H8 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A9...H9 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A10...H10 in "3"
+Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
+Dispensing 50.0 uL into wells A11...H11 in "3"
+
+---
+
+Commands¶
+Once the instruments and labware required for the protocol are defined, the next step is to define the commands that make up the protocol. The most common commands are aspirate(), dispense(), pick_up_tip(), and drop_tip(). These and many others are described in the Building Block Commands and Complex Commands sections, which go into more detail about the commands and how they work. These commands typically specify which wells of which labware to interact with, using the labware you defined earlier, and are methods of the instruments you created in the pipette section. For instance, in our example protocol, you use the pipette you defined to:
+Pick up a tip (implicitly from the tiprack you specified in slot 1 and assigned to the pipette): pipette.pick_up_tip()
+Aspirate 100 µL from well A1 of the 96 well plate you specified in slot 2: pipette.aspirate(100, plate['A1'])
+Dispense 100 µL into well A2 of the 96 well plate you specified in slot 2: pipette.dispense(100, plate['A2'])
+Drop the tip (implicitly into the trash at the back right of the robot’s deck): pipette.drop_tip()
+Simulating Python Protocols¶
+In general, the best way to simulate a protocol is to simply upload it to your OT-2 through the Opentrons App. When you upload a protocol via the app, the OT-2 simulates the protocol and the app displays any errors. However, if you want to simulate protocols without being connected to an OT-2, you can download the Opentrons Python package.
+Installing¶
+To install the Opentrons package, you must install it from Python’s package manager, pip. The exact method of installation is slightly different depending on whether you use Jupyter on your computer or not. You do not need to do this if you want to use The Robot’s Jupyter Notebook, only for your locally installed notebook.
+Non-Jupyter Installation¶
+First, install Python 3.7.6 (Windows x64, Windows x86, OS X) or higher on your local computer.
+
+---
+
+Tutorial¶
+Introduction¶
+This tutorial will guide you through creating a Python protocol file from scratch. At the end of this process you’ll have a complete protocol that can run on an OT-2 robot. If you don’t have an OT-2 yet (or if you’re away from your lab, or if your robot is in use) you can use the same file to simulate the protocol on your computer instead.
+What You’ll Automate¶
+The lab task that you’ll automate in this tutorial is serial dilution: taking a solution and progressively diluting it by transferring it stepwise across a plate from column 1 to column 12. With just a dozen or so lines of code, you can instruct your robot to perform the hundreds of individual pipetting actions necessary to fill an entire 96-well plate. And all of those liquid transfers will be done automatically, so you’ll have more time to do other work in your lab.
+Before You Begin¶
+You’re going to write some Python code, but by no means do you need to be a Python expert to get started writing Opentrons protocols. You should know some basic Python syntax, like how it uses indentation to group blocks of code, dot notation for calling methods, and the format of lists and dictionaries. You’ll also be using common control structures like if statements and for loops.
+To run your code, make sure that you’ve installed Python 3 and the pip package installer. You should write your code in your favorite plaintext editor or IDE and save it in a file with a .py extension, like dilution-tutorial.py.
+If you plan to run your protocol on an OT-2, you’ll want to have it ready with the right kind of hardware and labware:
+Set up your OT-2, including attaching pipettes and initial calibration. You can use either a single-channel or 8-channel pipette for this tutorial. Most code examples will use a P300 Single-Channel GEN2 pipette.
+Prepare the labware you need for serial dilution. The code examples will use the following labware definitions, but as long as you have labware of each type you can modify the code to run with your labware.
+Reservoir: NEST 12 Well Reservoir 15 mL nest_12_reservoir_15ml
+
+---
+
+On a Robot¶
+The simplest way to run your protocol on an OT-2 is to use the Opentrons App. Once you’ve installed the app and connected to your robot, navigate to the Protocol tab. Click Choose File… and open your protocol from the file picker. You should see “Protocol - Serial Dilution Tutorial” (or whatever protocolName you entered in the metadata) in a banner at the top of the page.
+If you have any remaining calibration tasks to do, you can finish them up here. Below the calibration section is a preview of the initial deck state. Optionally you can run Labware Position Check, or you can go ahead and click Proceed to Run.
+On the Run tab, you can double-check the Protocol Steps, which are similar to the command-line simulation output. Make sure all your labware and liquids are in the right place, and then click Start run. The run log will update in real time as your robot proceeds through the steps.
+When it’s all done, check the results of your serial dilution procedure — you should have a beautiful dye gradient running across the plate!
+Next Steps¶
+This tutorial has relied heavily on the transfer() method, but there’s much more that the Python Protocol API can do. Many advanced applications use building block commands for finer control over the robot. These commands let you aspirate and dispense separately, add air gaps, blow out excess liquid, move the pipette to any location, and more. For protocols that use Opentrons Hardware Modules, there are methods to control their behavior. And all of the API’s classes and methods are catalogued in the API Version 2 Reference.
+
+-----
+
 Inoculate a flask of Luria-Bertani (LB) broth with E.coli and grow the cells overnight at 37°C with shaking

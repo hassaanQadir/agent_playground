@@ -34,31 +34,6 @@ pinecone.init(api_key=pinecone_api_key, enviroment="us-west1-gcp")
 index_name = 'opentronsapi-docs'
 index = pinecone.Index(index_name)
 
-
-def retry_on_error(func, arg, max_attempts=5):
-    """
-    Retry a function in case of an error. This guards against rate limit errors.
-    The function will be retried max_attempts times with a delay of 4 seconds between attempts.
-    :param func: The function to retry
-    :param arg: The argument to pass to the function
-    :param max_attempts: The maximum number of attempts
-    :return: The result of the function or a string indicating an API error
-    """
-    for attempt in range(max_attempts):
-        try:
-            result = func(arg)
-            return result
-        except Exception as e:
-            if attempt < max_attempts - 1:  # no need to sleep on the last attempt
-                print(f"Attempt {attempt + 1} failed. Retrying in 4 seconds.")
-                time.sleep(4)
-            else:
-                print(f"Attempt {attempt + 1} failed. No more attempts left.")
-                API_error = "OpenTronsAPI Error"
-                return API_error
-
-
-
 def queryAugmenter(query):
     """
     Query the OpenTrons API index vectorized database and return an augmented query
@@ -95,36 +70,21 @@ def create_llmchain(agent_id):
     human_message_prompt = HumanMessagePromptTemplate.from_template("{text}")
     chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, example_human, example_ai, human_message_prompt])
     return LLMChain(llm=chat, prompt=chat_prompt)
-    
-def askOpenTrons(augmented_query):
-    # system message to 'prime' the model
-    template = (agentsData[5]['agent5_template'])
-
-    res = openai.ChatCompletion.create( 
-        model=agentsData[0]['chat_model'],
-        messages=[
-            {"role": "system", "content": template},
-            {"role": "user", "content": augmented_query}
-        ]
-    )
-    return (res['choices'][0]['message']['content'])
 
 chain_5 = create_llmchain(5)
 
 def test(user_input):
-    user_input += "Successfully accessed\n"
-    user_input += "the molbio.ai\n"
-    original_query = "Inoculate a flask of Luria-Bertani (LB) broth with E.coli and grow the cells overnight at 37°C with shaking"
+    original_query = user_input
     augmented_query = queryAugmenter(original_query)
+
     theQuery = augmented_query
+
     answer = chain_5.run(theQuery)
-    answer += user_input
     answer += theQuery
+    
     return answer
 
 if __name__ == "__main__":
-   #answer = main("Make glow in the dark e. coli")
-   marker = sys.argv[-1]
-   answer = "batman\n\n" + test("\n\n" + marker)
+   answer = test("Inoculate a flask of Luria-Bertani (LB) broth with E.coli and grow the cells overnight at 37°C with shaking")
    with open('answer.txt', 'w') as f:
     f.write(answer)
