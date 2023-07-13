@@ -80,6 +80,22 @@ def queryAugmenter(query):
     
     return augmented_query
 
+def create_llmchain(agent_id):
+    """
+    Create a LLMChain for a specific agent by calling on prompts stored in agents.json
+
+    :param agent_id: The ID of the agent
+    :return: An instance of LLMChain
+    """
+    chat = ChatOpenAI(streaming=False, callbacks=[StreamingStdOutCallbackHandler()], temperature=0, openai_api_key=openai_api_key)
+    template = agentsData[agent_id]['agent{}_template'.format(agent_id)]
+    system_message_prompt = SystemMessagePromptTemplate.from_template(template)
+    example_human = HumanMessagePromptTemplate.from_template(agentsData[agent_id]['agent{}_example1_human'.format(agent_id)])
+    example_ai = AIMessagePromptTemplate.from_template(agentsData[agent_id]['agent{}_example1_AI'.format(agent_id)])
+    human_message_prompt = HumanMessagePromptTemplate.from_template("{text}")
+    chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, example_human, example_ai, human_message_prompt])
+    return LLMChain(llm=chat, prompt=chat_prompt)
+    
 def askOpenTrons(augmented_query):
     # system message to 'prime' the model
     template = (agentsData[5]['agent5_template'])
