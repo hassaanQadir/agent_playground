@@ -34,15 +34,17 @@ pinecone.init(api_key=pinecone_api_key, enviroment="us-west1-gcp")
 index_name = 'opentronsapi-docs'
 index = pinecone.Index(index_name)
 
-def queryAugmenter(query):
+def queryAugmenter(chain_id, query):
     """
     Query the OpenTrons API index vectorized database and return an augmented query
     :param query: The question to ask
     :return: Relevant context for the query from the OpenTrons API vector databse
     """
+    template = agentsData[chain_id]['agent{}_template'.format(chain_id)]
+
     embed_model = agentsData[0]['embed_model']
     res = openai.Embedding.create(
-        input=["Provide the exact code to perform this step:", query],
+        input=[template, query],
         engine=embed_model
     )
     # retrieve from Pinecone
@@ -75,13 +77,13 @@ chain_5 = create_llmchain(5)
 
 def test(user_input):
     original_query = user_input
-    augmented_query = queryAugmenter(original_query)
+    augmented_query = queryAugmenter(5, original_query)
 
     theQuery = augmented_query
 
     answer = chain_5.run(theQuery)
     answer += theQuery
-    
+
     return answer
 
 if __name__ == "__main__":

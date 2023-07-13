@@ -1,113 +1,212 @@
 To complete the task of inoculating a flask of Luria-Bertani (LB) broth with E.coli and growing the cells overnight at 37°C with shaking, you can use the following code:
 
 ```python
-# Assuming the flask is in slot 1 and the plate with E.coli is in slot 2
+# Assuming the flask is in slot 1
+# Assuming the E.coli culture is in a tube in slot 2
 
 # Define the labware and pipette
 flask = containers.load('flask', '1')
-plate = containers.load('96-flat', '2')
+tube = containers.load('tube-rack-2ml', '2')
 pipette = instruments.P300_Single()
 
-# Transfer 1 mL of LB broth from the flask to each well of the plate
-for well in plate.wells():
-    pipette.transfer(1000, flask, well, new_tip='always')
+# Transfer 1 mL of E.coli culture to the flask
+pipette.transfer(1000, tube['A1'], flask['A1'], new_tip='always')
 
-# Inoculate each well with E.coli from the corresponding well of the plate
-for well in plate.wells():
-    pipette.transfer(100, well, well, mix_after=(3, 100), new_tip='always')
-
-# Incubate the plate overnight at 37°C with shaking
-incubation_time = 12  # hours
-incubation_temperature = 37  # degrees Celsius
-shaking_speed = 200  # rpm
-
-# Set the temperature of the incubator to 37°C
-incubator.set_temperature(incubation_temperature)
-
-# Set the shaking speed of the incubator to 200 rpm
-incubator.set_shaking_speed(shaking_speed)
-
-# Start the incubation for the specified time
-incubator.start_incubation(hours=incubation_time)
+# Incubate the flask at 37°C with shaking
+# Note: The shaking function may vary depending on the specific shaking module used
+# Replace 'shaking_module' with the appropriate shaking module name
+pipette.delay(minutes=1440)
+pipette.shake('shaking_module', flask['A1'])
 
 # Print the commands in the protocol
 print(protocol.commands())
 ```
 
-Please note that this code is a general example and may need modification based on your specific labware and deck configuration. Additionally, the code assumes that you have an incubator module attached to the robot and that it supports setting temperature and shaking speed.Dispensing 30.0 uL into well E2 in "1"
-Dispensing 30.0 uL into well F2 in "1"
-Dispensing 30.0 uL into well G2 in "1"
-Dispensing 30.0 uL into well H2 in "1"
-Blowing out at well A1 in "12"
-Dropping tip well A1 in "12"
-See this image for example,
-New in version 2.0.
+Please note that this code is a general example and may need modification based on your specific labware and deck configuration. Additionally, the shaking function may vary depending on the specific shaking module used with the Opentrons robot.Gives the name, contact information, and a brief description for the protocol. Also indicates the minimum version of the API that the protocol can run on.
+Tells the robot that there is:
+A 96-well flat plate in slot 1.
+A rack of 300 µL tips in slot 2.
+A single-channel 300 µL pipette attached to the left mount, which should pick up tips from the aforementioned rack.
+Tells the robot to act by:
+Picking up the first tip from the tip rack.
+Aspirating 100 µL of liquid from well A1 of the plate.
+Dispensing 100 µL of liquid into well B1 of the plate.
+Dropping the tip in the trash.
+There is much more that the OT-2 robot and the API can do! The Building Block Commands, Complex Commands, and Hardware Modules pages cover many of these functions.
+More Resources¶
+Opentrons App¶
+The Opentrons App is the easiest way to run your Python protocols. The app supports the latest versions of macOS, Windows, and Ubuntu.
+Support¶
+Questions about setting up your OT-2, using Opentrons software, or troubleshooting? Check out our support articles or get in touch directly with Opentrons Support.
+Custom Protocol Service¶
+Don’t have the time or resources to write your own protocols? The Opentrons Custom Protocols service can get you set up in as little as a week.
+Contributing¶
+Opentrons software, including the Python API and this documentation, is open source. If you have an improvement or an interesting idea, you can create an issue on GitHub by following our guidelines.
+That guide also includes more information on how to directly contribute code.
 
 ---
 
-will have the steps
-Transferring 50 from well A1 in "3" to wells A2...H12 in "3"
-Picking up tip wells A1...H1 in "4"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A2...H2 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A3...H3 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A4...H4 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A5...H5 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A6...H6 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A7...H7 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A8...H8 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A9...H9 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A10...H10 in "3"
-Aspirating 50.0 uL from wells A1...H1 in "3" at 1 speed
-Dispensing 50.0 uL into wells A11...H11 in "3"
+We thought you’d like to know…
+                The documentation you are viewing is for version 1 of the OT-2
+                Python Protocol API. This version of the API is no longer supported
+                on Opentrons App and Robot Software 4.0.0 and later. Please visit the
+                documentation for version 2 of the API
+                to access the most up to date information.
+            
+OT-2 Python API Version 1¶
+The Opentrons API is a simple Python framework designed to make writing automated biology lab protocols easy.
+We’ve designed it in a way we hope is accessible to anyone with basic Python and wetlab skills. As a bench scientist, you should be able to code your automated protocols in a way that reads like a lab notebook.
+Getting Started¶
+New to Python? Check out our Using Python In Protocols page first before continuing. To get a sense of the typical structure of our scripts, take a look at our Examples page.
+Our API requires Python version 3.7.6 or later. Once this is set up on your computer, you can simply use pip to install the Opentrons package.
+pip install opentrons
+To simulate protocols on your laptop, check out Simulating Your Scripts. When you’re ready to run your script on a robot, download our latest desktop app
+Troubleshooting¶
+If you encounter problems using our products please take a look at our support docs or contact our team via intercom on our website at opentrons.com.
+Overview¶
+How it Looks¶
+The design goal of the Opentrons API is to make code readable and easy to understand. For example, below is a short set of instruction to transfer from well 'A1' to well 'B1' that even a computer could understand:
+Use the Opentrons API's labware and instruments
+This protocol is by me; it’s called Opentrons Protocol Tutorial and is used for demonstrating the Opentrons API
+Add a 96 well plate, and place it in slot '2' of the robot deck
+Add a 200uL tip rack, and place it in slot '1' of the robot deck
+Add a single-channel 300uL pipette to the left mount, and tell it to use that tip rack
 
 ---
 
-Commands¶
-Once the instruments and labware required for the protocol are defined, the next step is to define the commands that make up the protocol. The most common commands are aspirate(), dispense(), pick_up_tip(), and drop_tip(). These and many others are described in the Building Block Commands and Complex Commands sections, which go into more detail about the commands and how they work. These commands typically specify which wells of which labware to interact with, using the labware you defined earlier, and are methods of the instruments you created in the pipette section. For instance, in our example protocol, you use the pipette you defined to:
-Pick up a tip (implicitly from the tiprack you specified in slot 1 and assigned to the pipette): pipette.pick_up_tip()
-Aspirate 100 µL from well A1 of the 96 well plate you specified in slot 2: pipette.aspirate(100, plate['A1'])
-Dispense 100 µL into well A2 of the 96 well plate you specified in slot 2: pipette.dispense(100, plate['A2'])
-Drop the tip (implicitly into the trash at the back right of the robot’s deck): pipette.drop_tip()
-Simulating Python Protocols¶
-In general, the best way to simulate a protocol is to simply upload it to your OT-2 through the Opentrons App. When you upload a protocol via the app, the OT-2 simulates the protocol and the app displays any errors. However, if you want to simulate protocols without being connected to an OT-2, you can download the Opentrons Python package.
-Installing¶
-To install the Opentrons package, you must install it from Python’s package manager, pip. The exact method of installation is slightly different depending on whether you use Jupyter on your computer or not. You do not need to do this if you want to use The Robot’s Jupyter Notebook, only for your locally installed notebook.
-Non-Jupyter Installation¶
-First, install Python 3.7.6 (Windows x64, Windows x86, OS X) or higher on your local computer.
+We thought you'd like to know...
+The documentation you are viewing is for the Opentrons OT-1. If you have an Opentrons OT-2, please click here for the OT-2 Python Protocol API documentation.
+                
+                Opentrons API¶
+                The Opentrons API is a simple framework designed to make writing
+                automated biology lab protocols easy.
+              
+                We’ve designed it in a way we hope is accessible to anyone with
+                basic computer and wetlab skills. As a bench scientist, you
+                should be able to code your automated protocols in a way that
+                reads like a lab notebook.
+              
+View source code on GitHub
+                  How it Looks¶
+                  The design goal of the Opentrons API is to make code readable
+                  and easy to understand. For example, below is a short set of
+                  instruction to transfer from well
+                  'A1'
+                  to well
+                  'B1'
+                  that even a computer could understand:
+                
+Use the Opentrons API's containers and instruments
+Add a 96 well plate, and place it in slot 'B1'
+Add a 200uL tip rack, and place it in slot 'A1'
+Add a 200uL pipette to axis 'b', and tell it to use that tip rack
+Transfer 100uL from the plate's 'A1' well to it's 'A2' well
+                  If we were to rewrite this with the Opentrons API, it would
+                  look like the following:
+                
+# imports
+from opentrons import containers, instruments
+# containers
+plate = containers.load('96-flat', 'B1')
+tiprack = containers.load('tiprack-200ul', 'A1')
+# pipettes
+pipette = instruments.Pipette(axis='b', max_volume=200, tip_racks=[tiprack])
+# commands
+pipette.transfer(100, plate.wells('A1'), plate.wells('B1'))
+                  How it’s Organized¶
+                  When writing protocols using the Opentrons API, there are
+                  generally three sections:
+                
+Imports
+Containers
+Pipettes
+Commands
+                    Imports¶
+                    When writing in Python, you must always include the
 
 ---
 
-Tutorial¶
-Introduction¶
-This tutorial will guide you through creating a Python protocol file from scratch. At the end of this process you’ll have a complete protocol that can run on an OT-2 robot. If you don’t have an OT-2 yet (or if you’re away from your lab, or if your robot is in use) you can use the same file to simulate the protocol on your computer instead.
-What You’ll Automate¶
-The lab task that you’ll automate in this tutorial is serial dilution: taking a solution and progressively diluting it by transferring it stepwise across a plate from column 1 to column 12. With just a dozen or so lines of code, you can instruct your robot to perform the hundreds of individual pipetting actions necessary to fill an entire 96-well plate. And all of those liquid transfers will be done automatically, so you’ll have more time to do other work in your lab.
-Before You Begin¶
-You’re going to write some Python code, but by no means do you need to be a Python expert to get started writing Opentrons protocols. You should know some basic Python syntax, like how it uses indentation to group blocks of code, dot notation for calling methods, and the format of lists and dictionaries. You’ll also be using common control structures like if statements and for loops.
-To run your code, make sure that you’ve installed Python 3 and the pip package installer. You should write your code in your favorite plaintext editor or IDE and save it in a file with a .py extension, like dilution-tutorial.py.
-If you plan to run your protocol on an OT-2, you’ll want to have it ready with the right kind of hardware and labware:
-Set up your OT-2, including attaching pipettes and initial calibration. You can use either a single-channel or 8-channel pipette for this tutorial. Most code examples will use a P300 Single-Channel GEN2 pipette.
-Prepare the labware you need for serial dilution. The code examples will use the following labware definitions, but as long as you have labware of each type you can modify the code to run with your labware.
-Reservoir: NEST 12 Well Reservoir 15 mL nest_12_reservoir_15ml
+You are currently viewing the documentation for the Opentrons
+                OT-1. To view documentation for the OT-2, click
+                here.
+              
+Search
+                Please activate JavaScript to enable the search functionality.
+              
+              From here you can search these documents. Enter your search words
+              into the box below and click "search". Note that the search
+              function will automatically search for all of the words. Pages
+              containing fewer words won't appear in the result list.
 
 ---
 
-On a Robot¶
-The simplest way to run your protocol on an OT-2 is to use the Opentrons App. Once you’ve installed the app and connected to your robot, navigate to the Protocol tab. Click Choose File… and open your protocol from the file picker. You should see “Protocol - Serial Dilution Tutorial” (or whatever protocolName you entered in the metadata) in a banner at the top of the page.
-If you have any remaining calibration tasks to do, you can finish them up here. Below the calibration section is a preview of the initial deck state. Optionally you can run Labware Position Check, or you can go ahead and click Proceed to Run.
-On the Run tab, you can double-check the Protocol Steps, which are similar to the command-line simulation output. Make sure all your labware and liquids are in the right place, and then click Start run. The run log will update in real time as your robot proceeds through the steps.
-When it’s all done, check the results of your serial dilution procedure — you should have a beautiful dye gradient running across the plate!
-Next Steps¶
-This tutorial has relied heavily on the transfer() method, but there’s much more that the Python Protocol API can do. Many advanced applications use building block commands for finer control over the robot. These commands let you aspirate and dispense separately, add air gaps, blow out excess liquid, move the pipette to any location, and more. For protocols that use Opentrons Hardware Modules, there are methods to control their behavior. And all of the API’s classes and methods are catalogued in the API Version 2 Reference.
+You are currently viewing the documentation for the Opentrons
+                OT-1. To view documentation for the OT-2, click
+                here.
+              
+                Design with Python¶
+                Writing protocols in Python requires some up-front design before
+                seeing your liquid handling automation in action. At a
+                high-level, writing protocols with the Opentrons API looks like:
+              
+Write a Python protocol
+Test the code for errors
+Repeat steps 1 & 2
+Calibrate labware on robot
+Run your protocol
+                These sets of documents aim to help you get the most out of
+                steps 1 & 2, the “design” stage.
+              
+                  Python for Beginners¶
+                  If Python is new to you, we suggest going through a few simple
+                  tutorials to acquire a base understanding to build upon. The
+                  following tutorials are a great starting point for working
+                  with the Opentrons API (from
+                  learnpython.org):
+                
+Hello World
+Variables and Types
+Lists
+Basic Operators
+Conditions
+Loops
+Functions
+Dictionaries
+                  After going through the above tutorials, you should have
+                  enough of an understanding of Python to work with the
+                  Opentrons API and start designing your experiments!
+                
+                  Working with Python¶
+                  Currently, we recommend writing your protocols in one of two
+                  ways:
+                
+                    Text Editor¶
+                    Using a popular and free code editor, like
+                    Sublime Text 3, is a common method for writing Python protocols. Download
+                    onto your computer, and you can now write and save Python
+                    scripts.
+                  
+Note
+                      Make sure that when saving a protocol file, it ends with
+                      the
+                      .py
+                      file extension. This will ensure the App and other
+                      programs are able to properly read it.
+                    
+                      For example,
+                      my_protocol_file.py
+                    Jupyter Notebook¶
+                    For a more interactive environment to write and debug using
+                    some of our API tools, we recommend using Jupyter Notebook.
+                    To begin, just install
+                    Anaconda, which comes with Jupyter Notebook.
+                  
+                    Once installed, launch Jupyter Notebook, and install the
+                    Opentrons API by doing the following:
+                  
+Create a new Python notebook
+                      Run the command
+                      !pip
 
 -----
 
