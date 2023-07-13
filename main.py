@@ -32,9 +32,9 @@ openai.api_key = openai_api_key
 pinecone.init(api_key=pinecone_api_key, enviroment="us-west1-gcp")
 # Name of the index where we vectorized the OpenTrons API
 index_name = 'opentronsapi-docs'
-index = pinecone.Index(index_name)
+opentronsapi_docs = pinecone.Index(index_name)
 
-def queryAugmenter(chain_id, query):
+def queryAugmenter(index, chain_id, query):
     """
     Query the OpenTrons API index vectorized database and return an augmented query
     :param query: The question to ask
@@ -77,7 +77,7 @@ chain_5 = create_llmchain(5)
 
 def test(user_input):
     original_query = user_input
-    augmented_query = queryAugmenter(5, original_query)
+    augmented_query = queryAugmenter(opentronsapi_docs, 5, original_query)
 
     theQuery = augmented_query
 
