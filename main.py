@@ -24,9 +24,9 @@ load_dotenv('.env')
 # Use the environment variables for the API keys if available
 openai_api_key = os.getenv('OPENAI_API_KEY')
 pinecone_api_key = os.getenv('PINECONE_API_KEY')
-# Load agents' data from JSON
-with open('agents.json', 'r') as f:
-    agentsData = json.load(f)
+# Load chains' data from JSON
+with open('chains.json', 'r') as f:
+    chainsData = json.load(f)
 # Set the OpenAI and Pinecone API keys
 openai.api_key = openai_api_key
 pinecone.init(api_key=pinecone_api_key, enviroment="us-west1-gcp")
@@ -40,9 +40,9 @@ def queryAugmenter(chain_id, query):
     :param query: The question to ask
     :return: Relevant context for the query from the OpenTrons API vector databse
     """
-    template = agentsData[chain_id]['agent{}_template'.format(chain_id)]
+    template = chainsData[chain_id]['chain{}_template'.format(chain_id)]
 
-    embed_model = agentsData[0]['embed_model']
+    embed_model = chainsData[0]['embed_model']
     res = openai.Embedding.create(
         input=[template, query],
         engine=embed_model
@@ -57,18 +57,18 @@ def queryAugmenter(chain_id, query):
     
     return augmented_query
 
-def create_llmchain(agent_id):
+def create_llmchain(chain_id):
     """
-    Create a LLMChain for a specific agent by calling on prompts stored in agents.json
+    Create a LLMChain for a specific chain by calling on prompts stored in chains.json
 
-    :param agent_id: The ID of the agent
+    :param chain_id: The ID of the chain
     :return: An instance of LLMChain
     """
     chat = ChatOpenAI(streaming=False, callbacks=[StreamingStdOutCallbackHandler()], temperature=0, openai_api_key=openai_api_key)
-    template = agentsData[agent_id]['agent{}_template'.format(agent_id)]
+    template = chainsData[chain_id]['chain{}_template'.format(chain_id)]
     system_message_prompt = SystemMessagePromptTemplate.from_template(template)
-    example_human = HumanMessagePromptTemplate.from_template(agentsData[agent_id]['agent{}_example1_human'.format(agent_id)])
-    example_ai = AIMessagePromptTemplate.from_template(agentsData[agent_id]['agent{}_example1_AI'.format(agent_id)])
+    example_human = HumanMessagePromptTemplate.from_template(chainsData[chain_id]['chain{}_example1_human'.format(chain_id)])
+    example_ai = AIMessagePromptTemplate.from_template(chainsData[chain_id]['chain{}_example1_AI'.format(chain_id)])
     human_message_prompt = HumanMessagePromptTemplate.from_template("{text}")
     chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt, example_human, example_ai, human_message_prompt])
     return LLMChain(llm=chat, prompt=chat_prompt)
