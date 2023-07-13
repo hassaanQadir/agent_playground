@@ -109,18 +109,22 @@ def askOpenTrons(augmented_query):
     )
     return (res['choices'][0]['message']['content'])
 
-
+chain_5 = create_llmchain(5)
 
 def test(user_input):
     user_input += "Successfully accessed\n"
     user_input += "the molbio.ai\n"
-    augmented_query = queryAugmenter("Put 1 ng of DNA stored 50ug/ml into the eppendorf with 100 ul of water")
-    user_input += retry_on_error(askOpenTrons, augmented_query)
-    return user_input
+    original_query = "Inoculate a flask of Luria-Bertani (LB) broth with E.coli and grow the cells overnight at 37°C with shaking"
+    augmented_query = queryAugmenter(original_query)
+    theQuery = augmented_query
+    answer = chain_5.run(theQuery)
+    answer += user_input
+    answer += theQuery
+    return answer
 
 if __name__ == "__main__":
    #answer = main("Make glow in the dark e. coli")
    marker = sys.argv[-1]
-   answer = test(marker + "\nbatman\n")
+   answer = "batman\n\n" + test("\n\n" + marker)
    with open('answer.txt', 'w') as f:
     f.write(answer)
