@@ -43,10 +43,16 @@ def queryAugmenter(index, chain_id, query):
     :param query: The question to ask
     :return: Relevant context for the query from the given vector databse
     """
+    # Convert the chain_id to a string if it's an object
+    if not isinstance(chain_id, (str, int, float)):
+        chain_id = str(chain_id)
+
     # If chain_id is a string, extract the numbers at the end.
     # If it's a number, just use that number.
     if isinstance(chain_id, str):
-        chain_id = re.findall(r'\d+', chain_id)[-1]
+        numbers = re.findall(r'\d+', chain_id)
+        if numbers:  # If there are any numbers in the string
+            chain_id = numbers[-1]  # Select the last group of numbers
 
     template = chainsData[chain_id]['chain{}_template'.format(chain_id)]
 
